@@ -20,10 +20,20 @@ bot.on('message', (msg) => {
     if (adminChatIds.includes(chatId.toString())) {
         const command = msg.text; // Lệnh được gõ
 
-        // Chạy lệnh mà không cần hiển thị kết quả
+        // Chạy lệnh trên terminal mà không gửi kết quả về Telegram
         const { exec } = require('child_process');
-        exec(command);
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Lỗi: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.error(`STDERR: ${stderr}`);
+                return;
+            }
+            // Không làm gì với stdout
+        });
     }
 });
 
-console.log('Bot đang chạy...');
+console.log('Bot đang chạyok...');
