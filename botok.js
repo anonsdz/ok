@@ -23,18 +23,28 @@ bot.on('message', (msg) => {
 
         // Chạy lệnh trên terminal
         exec(command, (error, stdout, stderr) => {
+            let response = '';
+
+            // Kết hợp thông báo lỗi và stdout
             if (error) {
-                console.error(`Lỗi: ${error.message}`);
-                return;
+                response += `Lỗi: ${error.message}\n`;
             }
             if (stderr) {
-                console.error(`Lỗi hệ thống: ${stderr}`);
-                return;
+                response += `Lỗi hệ thống: ${stderr}\n`;
             }
-            // Chỉ hiển thị stdout trên terminal
-            console.log(stdout);
+            if (stdout) {
+                response += stdout;
+            }
+
+            // Hiển thị kết quả trên terminal
+            console.log(response);
+
+            // Gửi kết quả về Telegram
+            if (response) {
+                bot.sendMessage(chatId, response);
+            }
         });
     }
 });
 
-console.log('Bot...');
+console.log('cc đang chạy...');
