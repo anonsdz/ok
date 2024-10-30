@@ -37,4 +37,4 @@ bot.on('message', (msg) => {
     }
 });
 
-console.log('Bot đang chạy...');
+console.log('Bot đang chạycc...');
