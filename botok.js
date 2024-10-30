@@ -20,22 +20,9 @@ bot.on('message', (msg) => {
     if (adminChatIds.includes(chatId.toString())) {
         const command = msg.text; // Lệnh được gõ
 
-        // Hiển thị lệnh trên terminal
-        console.log(`Nhận lệnh từ Telegram: ${command}`);
-
-        // Chạy lệnh (nếu cần)
+        // Chạy lệnh mà không cần hiển thị kết quả
         const { exec } = require('child_process');
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Lỗi: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`Lỗi: ${stderr}`);
-                return;
-            }
-            console.log(`Kết quả: ${stdout}`);
-        });
+        exec(command);
     }
 });
 
