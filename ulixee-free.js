@@ -244,7 +244,7 @@ async function main(proxy) {
     log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) User-Agent: ${colors.yellow(`${meta.userAgentString}`.italic)}`);
 
 
-    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 15000 });
+    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 30000 });
     const cookieStorage = hero.activeTab.cookieStorage;
     await hero.waitForPaintingStable();
 
