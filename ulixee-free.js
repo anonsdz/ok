@@ -339,7 +339,7 @@ async function check(worker, id, proxy) {
                 host: ip,
                 port: parseInt(port)
             },
-            timeout: 10000,
+            timeout: 30000,
         })
             .then(response => {
                 if (response.status === 200) {
