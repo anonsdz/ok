@@ -137,7 +137,7 @@ if __name__ == "__main__":
         fetch_proxies_from_links("link.txt", "proxy.txt")
         print("Proxy list saved to proxy.txt.")
         time.sleep(1)
-        num_threads = 1000
+        num_threads = 100000
         check_live_proxies("proxy.txt", num_threads)
     except KeyboardInterrupt:
         print("Exiting... Please wait a moment...")
