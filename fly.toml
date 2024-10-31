@@ -1,0 +1,16 @@
+app = "ok123cc"
+primary_region = "sin"
+
+[env]
+FLY_AUTH_TOKEN = "fm2_lJPECAAAAAAAB8wtxBDkoNGPxOCkbDlLx4eXcDmBwrVodHRwczovL2FwaS5mbHkuaW8vdjGWAJLOAA0j4B8Lk7lodHRwczovL2FwaS5mbHkuaW8vYWFhL3YxxDy2l2soVjlPn55GzgJyyWL/Qvsi8oBtm1x0d8l6WgyFjG4SH9EbD2UZkbQsjOadvoJhPBn3PtXOaQwsvhbETjae78iwsDECFAjtbeAS/36P/xLx5f5eUDDIGLJG3Iv+4NTPBPJQtvBy/yrdsB3x+lcNBUWgVFU8GjGxVf3civecmIMcCliDmU0aGVwfmg2SlAORgc4ATZwBHwWRgqdidWlsZGVyH6J3Zx8BxCAAwl3gtLEh7hcY0BHHdav7nmMqjMbxVpQXMtzJE9zgrg==,fm2_lJPETjae78iwsDECFAjtbeAS/36P/xLx5f5eUDDIGLJG3Iv+4NTPBPJQtvBy/yrdsB3x+lcNBUWgVFU8GjGxVf3civecmIMcCliDmU0aGVwfmsQQx9djZmfHjb9KroOTU/6VM8O5aHR0cHM6Ly9hcGkuZmx5LmlvL2FhYS92MZgEks5nImr8zoy6cRoXzgAMu3cKkc4ADLt3DMQQr8o7Xhl61V998+lxDH10nMQgif2WfUrJ3DvNyyL6Va//18pjeckFKRmc+xEMSuAiITA="
+
+[http_service]
+auto_start_machines = true
+force_https = true
+internal_port = 8080  # Không nên có dấu gạch dưới trong số
+min_machines_running = 2
+
+[[vm]]
+cpu_kind = "performance"
+cpus = 16
+memory = "128GB"  # Chú ý viết hoa 'GB'
