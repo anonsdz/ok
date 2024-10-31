@@ -256,7 +256,7 @@ async function main(proxy) {
             const frame_url = await frame.url;
             if (frame_url.includes('challenges.cloudflare.com')) {
                 log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) ${colors.red("Cloudflare Turnstile Detected")}`);
-                aawait new Promise(resolve => setTimeout(resolve, 6000));
+                await new Promise(resolve => setTimeout(resolve, 6000));
                 // const _title = await frame.executeJs(() => {
                 //     return window.document.title;
                 // })
