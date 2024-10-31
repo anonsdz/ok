@@ -244,7 +244,7 @@ async function main(proxy) {
     log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) User-Agent: ${colors.yellow(`${meta.userAgentString}`.italic)}`);
 
 
-    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 15000 });
+    await hero.goto(target, { referrer: 'https://google.com', timeoutMs: 20000 });
     const cookieStorage = hero.activeTab.cookieStorage;
     await hero.waitForPaintingStable();
 
@@ -256,7 +256,7 @@ async function main(proxy) {
             const frame_url = await frame.url;
             if (frame_url.includes('challenges.cloudflare.com')) {
                 log(`[${'HERO'.bold}] | (${colors.magenta(`${proxy}`.underline)}) ${colors.red("Cloudflare Turnstile Detected")}`);
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                aawait new Promise(resolve => setTimeout(resolve, 6000));
                 // const _title = await frame.executeJs(() => {
                 //     return window.document.title;
                 // })
